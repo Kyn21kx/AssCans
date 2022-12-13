@@ -363,6 +363,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   engineForce: 150
   rotationForce: 10
+  maxVelocity: 7
 --- !u!1 &1502718026
 GameObject:
   m_ObjectHideFlags: 0

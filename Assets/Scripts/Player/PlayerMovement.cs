@@ -8,7 +8,9 @@ public class PlayerMovement : MonoBehaviour {
 	private float engineForce;
 	[SerializeField]
 	private float rotationForce;
-
+	[SerializeField]
+	private float maxVelocity;
+	
 	private Rigidbody rig;
 
 	private Vector3Int rotationYPR;
@@ -33,6 +35,10 @@ public class PlayerMovement : MonoBehaviour {
 		if (this.MovingUpwards)
 			this.ApplyUpwardsMovement(BOOST_FACTOR);
 		this.ApplyRotations(BOOST_FACTOR);
+
+		//Clamping velocity's magnitude
+		this.rig.velocity = Vector3.ClampMagnitude(this.rig.velocity, this.maxVelocity);
+		Debug.Log($"Velocity's magnitude: {this.rig.velocity.magnitude}");
 	}
 
 	private void HandleInput() {
@@ -80,16 +86,11 @@ public class PlayerMovement : MonoBehaviour {
 		//Apply a force to the relative upwards vector
 		Vector3 forceToApply = this.transform.up * engineForce * boostFactor * Time.fixedDeltaTime;
 		this.rig.AddForce(forceToApply, ForceMode.Impulse);
-		Debug.Log($"Applying force {forceToApply}");
 	}
 
 	private void ApplyRotations(float boostFactor) {
 		//Apply the proper rotation
 		Vector3 rotDir = (Vector3)this.rotationYPR * rotationForce * boostFactor * Time.fixedDeltaTime;
 		this.rig.transform.Rotate(rotDir);
-		if (rotDir.magnitude > 0f)
-			Debug.Log($"Applying torque {rotDir}");
 	}
-
-
 }
