@@ -63,6 +63,14 @@ public class PlayerMovement : MonoBehaviour {
 			this.rotationYPR.x--;
 			pressed = true;
 		}
+		if (Input.GetKey(KeyCode.A)) {
+			this.rotationYPR.z++;
+			pressed = true;
+		}
+		if (Input.GetKey(KeyCode.D)) {
+			this.rotationYPR.z--;
+			pressed = true;
+		}
 		//Clamp the vector to their min and max values to not go over and apply some weird forces (TODO: maybe normalize this, but let's wait)
 		this.rotationYPR.Clamp(new Vector3Int(-1, -1, -1), Vector3Int.one);
 		return pressed;
