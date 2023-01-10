@@ -47,7 +47,6 @@ public class CameraFollow : MonoBehaviour {
 
 
 	private void RotateAround() {
-		Debug.Log($"Mouse input: {this.mouseInput}");
 		Vector3 rotationVector = new Vector3(this.mouseInput.y, this.mouseInput.x, 0f);
 		this.pivot.Rotate(rotationVector * this.mouseSpeed * Time.deltaTime);
 		Vector3 correctedEuler = this.pivot.eulerAngles;
