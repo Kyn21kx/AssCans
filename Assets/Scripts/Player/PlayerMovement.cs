@@ -10,13 +10,20 @@ public class PlayerMovement : MonoBehaviour {
 	private float rotationForce;
 	[SerializeField]
 	private float maxVelocity;
-	
+	[SerializeField]
+	private float rotationStabilityThreshold;
+	[SerializeField]
+	private float rotationStabilitySpeed;
+
 	private Rigidbody rig;
 
 	private Vector3Int rotationYPR;
 	public bool MovingUpwards { get; private set; }
 
+	private float rotationBlendFactor;
+
 	private void Start() {
+		this.rotationBlendFactor = 0f;
 		this.rig = this.GetComponent<Rigidbody>();
 		this.MovingUpwards = false;
 		this.rotationYPR = Vector3Int.zero;
@@ -38,7 +45,6 @@ public class PlayerMovement : MonoBehaviour {
 
 		//Clamping velocity's magnitude
 		this.rig.velocity = Vector3.ClampMagnitude(this.rig.velocity, this.maxVelocity);
-		Debug.Log($"Velocity's magnitude: {this.rig.velocity.magnitude}");
 	}
 
 	private void HandleInput() {
@@ -89,6 +95,15 @@ public class PlayerMovement : MonoBehaviour {
 	}
 
 	private void ApplyRotations(float boostFactor) {
+		//Correct previous rotations that might've been caused by colliding into something
+		Vector3 currAngVelocity = this.rig.angularVelocity;
+		if (currAngVelocity.magnitude > this.rotationStabilityThreshold) {
+			Debug.Log($"Chocamos alv: {currAngVelocity.magnitude}");
+		}
+		else if (this.rotationYPR != Vector3Int.zero) {
+			this.rig.angularVelocity = Vector3.zero;
+		}
+		//Get the current difference to zero and keep lerping if necessary
 		//Apply the proper rotation
 		Vector3 rotDir = (Vector3)this.rotationYPR * rotationForce * boostFactor * Time.fixedDeltaTime;
 		this.rig.transform.Rotate(rotDir);
