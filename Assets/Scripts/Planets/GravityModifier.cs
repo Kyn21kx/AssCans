@@ -19,19 +19,19 @@ public class GravityModifier : MonoBehaviour {
 	private void FixedUpdate() {
 		//Do a sphere cast to the specified radius
 		Collider[] hits = Physics.OverlapSphere(transform.position, radius);
-		Debug.Log($"Currently affecting {hits.Length} Objects");
 		foreach (Collider hit in hits) {
 			//Each one of the hits MUST contain a rigidbody, otherwise, ignore it, but log a warning
 			Transform currTransform = hit.transform;
+			if (currTransform == this.transform) continue;
 			Rigidbody currRig = currTransform.GetComponent<Rigidbody>();
 			if (currRig == null) {
-				Debug.LogWarning($"The object ${currTransform.name} does not have a rigidbody attached to it, and therefore can't be affected by gravity!");
+				Debug.LogWarning($"The object {currTransform.name} does not have a rigidbody attached to it, and therefore can't be affected by gravity!");
 				continue;
 			}
 			//Here a rigidbody is guaranteed :D
 			//Get the direction vector
 			Vector3 pullDirection = (currRig.position - transform.position).normalized;
-			Vector3 moddedVelocity = currRig.velocity - pullDirection;
+			Vector3 moddedVelocity = currRig.velocity - (pullDirection * this.pullingForce);
 			currRig.velocity = moddedVelocity;
 		}
 	}

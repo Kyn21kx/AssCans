@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Overheating))]
 public class PlayerMovement : MonoBehaviour {
 
 	[SerializeField]
@@ -20,11 +21,11 @@ public class PlayerMovement : MonoBehaviour {
 	private Vector3Int rotationYPR;
 	public bool MovingUpwards { get; private set; }
 
-	private float rotationBlendFactor;
+	private Overheating overheatingRef;
 
 	private void Start() {
-		this.rotationBlendFactor = 0f;
 		this.rig = this.GetComponent<Rigidbody>();
+		this.overheatingRef = this.GetComponent<Overheating>();
 		this.MovingUpwards = false;
 		this.rotationYPR = Vector3Int.zero;
 	}
@@ -91,7 +92,10 @@ public class PlayerMovement : MonoBehaviour {
 	private void ApplyUpwardsMovement(float boostFactor) {
 		//Apply a force to the relative upwards vector
 		Vector3 forceToApply = this.transform.up * engineForce * boostFactor * Time.fixedDeltaTime;
+		this.overheatingRef.IncreaseHeat();
+		if (this.overheatingRef.IsOverheated) return;
 		this.rig.AddForce(forceToApply, ForceMode.Impulse);
+		
 	}
 
 	private void ApplyRotations(float boostFactor) {
