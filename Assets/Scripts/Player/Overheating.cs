@@ -18,7 +18,10 @@ public class Overheating : MonoBehaviour {
 	private float naturalCooldownSpeed;
 	[SerializeField]
 	private float heatUpSpeed;
+	[SerializeField]
+	private float timeToDecrease;
 	private SpartanTimer reloadTimer;
+	private SpartanTimer heatDecreaseTimer;
 	private PlayerMovement movRef;
 	[SerializeField]
 	private Image heatIndicator;
@@ -28,6 +31,7 @@ public class Overheating : MonoBehaviour {
 
 	private void Start() {
 		this.reloadTimer = new SpartanTimer(TimeMode.Framed);
+		this.heatDecreaseTimer = new SpartanTimer(TimeMode.Framed);
 		this.movRef = GetComponent<PlayerMovement>();
 	}
 
@@ -40,11 +44,11 @@ public class Overheating : MonoBehaviour {
 	}
 
 	private void CooldownNaturally() {
-		bool canCooldown = this.heat > 0 && !this.movRef.MovingUpwards && !this.IsOverheated;
+		float currDecreaseTime = this.heatDecreaseTimer.GetCurrentTime(TimeScaleMode.Seconds);
+		Debug.Log($"Curr dec time {currDecreaseTime}");
+		bool canCooldown = this.heat > 0 && !this.movRef.MovingUpwards && !this.IsOverheated && currDecreaseTime >= this.timeToDecrease;
 		if (canCooldown) {
-			//this.heat = Mathf.Lerp(this.heat, 0f, Time.deltaTime * this.naturalCooldownSpeed);
 			this.heat -= Time.deltaTime * this.naturalCooldownSpeed;
-			Debug.Log($"Lerped: {this.heat}");
 			//Round down now that we're close enough
 			this.heat = this.heat - 5f <= 0f ? 0f : this.heat;
 			Debug.Log($"Final: {this.heat}");
@@ -70,5 +74,6 @@ public class Overheating : MonoBehaviour {
 
 	public void IncreaseHeat() {
 		this.heat += Time.deltaTime * heatUpSpeed;
+		this.heatDecreaseTimer.Reset();
 	}
 }
