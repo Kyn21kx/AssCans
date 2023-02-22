@@ -47,11 +47,16 @@ public class CameraFollow : MonoBehaviour {
 
 
 	private void RotateAround() {
+		const float ROTATION_LIMIT_X = 0.3f;
 		Vector3 rotationVector = new Vector3(this.mouseInput.y, this.mouseInput.x, 0f);
 		this.pivot.Rotate(rotationVector * this.mouseSpeed * Time.deltaTime);
 		Vector3 correctedEuler = this.pivot.eulerAngles;
 		correctedEuler.z = 0f;
-		this.pivot.rotation = Quaternion.Euler(correctedEuler);
+		Quaternion correctedQuat = Quaternion.Euler(correctedEuler);
+		correctedQuat.x = Mathf.Clamp(correctedQuat.x, -ROTATION_LIMIT_X, ROTATION_LIMIT_X);
+		correctedQuat.z = Mathf.Clamp(correctedQuat.z, -ROTATION_LIMIT_X, ROTATION_LIMIT_X);
+		this.pivot.rotation = correctedQuat;
+		Debug.Log($"Current rotation: {this.pivot.rotation}");
 	}
 
 	private void FollowTarget() {
