@@ -177,7 +177,7 @@ MonoBehaviour:
   rotationForce: 10
   maxVelocity: 7
   rotationStabilityThreshold: 0.7
-  rotationStabilitySpeed: 1.5
+  rotationStabilitySpeed: 10
 --- !u!54 &237827550
 Rigidbody:
   m_ObjectHideFlags: 0
