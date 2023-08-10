@@ -45,13 +45,11 @@ public class Overheating : MonoBehaviour {
 
 	private void CooldownNaturally() {
 		float currDecreaseTime = this.heatDecreaseTimer.GetCurrentTime(TimeScaleMode.Seconds);
-		Debug.Log($"Curr dec time {currDecreaseTime}");
 		bool canCooldown = this.heat > 0 && !this.movRef.MovingUpwards && !this.IsOverheated && currDecreaseTime >= this.timeToDecrease;
 		if (canCooldown) {
 			this.heat -= Time.deltaTime * this.naturalCooldownSpeed;
 			//Round down now that we're close enough
 			this.heat = this.heat - 5f <= 0f ? 0f : this.heat;
-			Debug.Log($"Final: {this.heat}");
 		}
 	}
 

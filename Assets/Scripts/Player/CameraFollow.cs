@@ -56,7 +56,6 @@ public class CameraFollow : MonoBehaviour {
 		correctedQuat.x = Mathf.Clamp(correctedQuat.x, -ROTATION_LIMIT_X, ROTATION_LIMIT_X);
 		correctedQuat.z = Mathf.Clamp(correctedQuat.z, -ROTATION_LIMIT_X, ROTATION_LIMIT_X);
 		this.pivot.rotation = correctedQuat;
-		Debug.Log($"Current rotation: {this.pivot.rotation}");
 	}
 
 	private void FollowTarget() {
